@@ -25,7 +25,20 @@ export async function sendMessage(
     priority?: number;
   },
   { queueName, ...auth }: MNSQueueOptions,
-) {
+): Promise<{
+  /**
+   * 消息编号，在一个队列中唯一。
+   */
+  MessageId: string;
+  /**
+   * 	消息正文的MD5值。
+   */
+  MessageBodyMD5: string;
+  /**
+   * 发送延迟消息后返回的消息句柄。
+   */
+  ReceiptHandle?: string;
+}> {
   const method = 'POST';
   const uri = `/queues/${queueName}/messages`;
 
@@ -41,5 +54,5 @@ export async function sendMessage(
     },
   }, auth);
 
-  return res;
+  return res.Message;
 }

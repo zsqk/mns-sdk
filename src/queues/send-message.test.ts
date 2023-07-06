@@ -6,9 +6,9 @@ const accountId = Deno.env.get('accountId')!;
 const regionId = Deno.env.get('regionId')!;
 const accessKeyId = Deno.env.get('accessKeyId')!;
 const accessKeySecret = Deno.env.get('accessKeySecret')!;
+const queueName = Deno.env.get('queueName')!;
 
 Deno.test('sendMessage', async () => {
-  const queueName = 'test';
   const res = await sendMessage({ messageBody: 'lala' }, {
     accessKeyId,
     accessKeySecret,

@@ -16,7 +16,7 @@ export async function fetchData(
     query?: Record<string, string | number | undefined>;
   },
   { accessKeySecret, accountId, regionId, accessKeyId }: MNSOptions,
-) {
+): Promise<Record<string, any>> {
   const contentType = 'text/xml';
   const date = new Date().toUTCString();
   const headers = {
@@ -59,17 +59,11 @@ export async function fetchData(
     },
   ).then((v) => v.text());
   const parser = new XMLParser();
-  const jObj: unknown = parser.parse(res);
-  if (typeof jObj !== 'object' || jObj === null) {
-    throw new Error('cannot parse');
-  }
-  if ('Message' in jObj) {
-    return jObj.Message;
-  }
+  const jObj: Record<string, unknown> = parser.parse(res);
   if ('Error' in jObj) {
     throw getErrInfo(jObj.Error);
   }
-  throw new Error('cannot parse');
+  return jObj;
 }
 
 /**

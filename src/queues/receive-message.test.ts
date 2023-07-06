@@ -27,7 +27,7 @@ Deno.test('receiveMessage-fail-no-queue', async () => {
     accessKeySecret,
     regionId,
     accountId,
-    queueName,
+    queueName: 'no-queue',
   }).catch((err) => err);
   assertIsError(res, Error, 'queue name you provided is not exist');
 });

@@ -19,7 +19,7 @@ Deno.test('deleteMessage-s', async () => {
     queueName,
   });
 
-  const res = await deleteMessage({ receiptHandle: s.ReceiptHandle! }, {
+  const res = await deleteMessage({ receiptHandle: s.ReceiptHandle }, {
     accessKeyId,
     accessKeySecret,
     regionId,

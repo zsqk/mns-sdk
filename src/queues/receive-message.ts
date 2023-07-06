@@ -19,7 +19,7 @@ export async function receiveMessage(
   if (waitseconds) {
     p.set('waitseconds', waitseconds.toString());
   }
-  const uri = `/queues/${queueName}/messages}`;
+  const uri = `/queues/${queueName}/messages`;
 
   const res = await fetchData({
     uri,

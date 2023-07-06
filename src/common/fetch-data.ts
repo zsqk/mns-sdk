@@ -90,7 +90,7 @@ function getErrInfo(v: unknown): Error {
     'RequestId' in v && typeof v.RequestId === 'string' &&
     'HostId' in v && typeof v.HostId === 'string'
   ) {
-    console.error(v);
+    console.error('error: ', v);
     return new Error(v.Message);
   }
   return new Error(JSON.stringify(v));

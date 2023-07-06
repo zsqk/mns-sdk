@@ -19,11 +19,24 @@ export async function fetchData(
 ): Promise<Record<string, any>> {
   const contentType = 'text/xml';
   const date = new Date().toUTCString();
-  const headers = {
+  const headers: HeadersInit = {
     'Content-Type': contentType,
     'x-mns-version': '2015-06-06',
     'Date': date,
   };
+
+  let url = `https://${accountId}.mns.${regionId}.aliyuncs.com${uri}`;
+
+  if (query) {
+    const p = new URL(url);
+    Object.entries(query).forEach(([k, v]) => {
+      if (v !== undefined) {
+        p.searchParams.set(k, v.toString());
+      }
+    });
+    url = p.toString();
+  }
+
   const auth = await genAuth({
     accessKeySecret,
     httpMethod: method,
@@ -38,17 +51,8 @@ export async function fetchData(
     xmlContent = builder.build(payload);
   }
 
-  const p = new URLSearchParams();
-  if (query) {
-    Object.entries(query).forEach(([k,v]) => {
-      if (v !== undefined) {
-        p.set(k, v.toString());
-      }
-    })
-  }
-
   const res = await fetch(
-    `https://${accountId}.mns.${regionId}.aliyuncs.com${uri}?${p.toString()}`,
+    url,
     {
       method,
       headers: {

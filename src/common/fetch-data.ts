@@ -9,7 +9,12 @@ import { MNSOptions } from '../types/mns-types.ts';
  * @returns
  */
 export async function fetchData(
-  { uri, method, payload }: { uri: string; method: string; payload: unknown },
+  { uri, method, payload, query }: {
+    uri: string;
+    method: string;
+    payload?: unknown;
+    query?: Record<string, string | number | undefined>;
+  },
   { accessKeySecret, accountId, regionId, accessKeyId }: MNSOptions,
 ) {
   const contentType = 'text/xml';
@@ -26,11 +31,24 @@ export async function fetchData(
     headers,
   });
 
-  const builder = new XMLBuilder();
-  const xmlContent = builder.build(payload);
+  let xmlContent: string | undefined = undefined;
+
+  if (payload) {
+    const builder = new XMLBuilder();
+    xmlContent = builder.build(payload);
+  }
+
+  const p = new URLSearchParams();
+  if (query) {
+    Object.entries(query).forEach(([k,v]) => {
+      if (v !== undefined) {
+        p.set(k, v.toString());
+      }
+    })
+  }
 
   const res = await fetch(
-    `https://${accountId}.mns.${regionId}.aliyuncs.com${uri}`,
+    `https://${accountId}.mns.${regionId}.aliyuncs.com${uri}?${p.toString()}`,
     {
       method,
       headers: {
@@ -41,7 +59,6 @@ export async function fetchData(
     },
   ).then((v) => v.text());
   const parser = new XMLParser();
-  console.log('res', res);
   const jObj: unknown = parser.parse(res);
   if (typeof jObj !== 'object' || jObj === null) {
     throw new Error('cannot parse');

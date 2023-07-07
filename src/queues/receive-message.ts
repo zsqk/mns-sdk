@@ -33,15 +33,15 @@ export async function receiveMessage(
   /**
    * 消息发送到队列的时间，从1970年01月01日00:00:00 000开始的毫秒数。
    */
-  EnqueueTime: number | string;
+  EnqueueTime: number;
   /**
    * 第一次被消费的时间，从1970年01月01日00:00:00 000开始的毫秒数。
    */
-  FirstDequeueTime: number | string;
+  FirstDequeueTime: number;
   /**
    * 下次可被再次消费的时间，从1970年01月01日00:00:00 000开始的毫秒数。
    */
-  NextVisibleTime: number | string;
+  NextVisibleTime: number;
   /**
    * 	总共被消费的次数。
    */

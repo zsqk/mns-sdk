@@ -16,5 +16,6 @@ Deno.test('sendMessage', async () => {
     accountId,
     queueName,
   });
-  console.log('res', res);
+  assertEquals(typeof res.MessageId, 'string');
+  assertEquals(typeof res.MessageBodyMD5, 'string');
 });

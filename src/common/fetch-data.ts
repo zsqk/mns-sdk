@@ -25,22 +25,35 @@ export async function fetchData(
     'Date': date,
   };
 
-  let url = `https://${accountId}.mns.${regionId}.aliyuncs.com${uri}`;
+  const host = `https://${accountId}.mns.${regionId}.aliyuncs.com`;
+  let url = `${host}${uri}`;
 
   if (query) {
-    const p = new URL(url);
-    Object.entries(query).forEach(([k, v]) => {
-      if (v !== undefined) {
-        p.searchParams.set(k, v.toString());
-      }
-    });
-    url = p.toString();
+    if (url.includes('?')) {
+      // 为了部分绕过 URL 编码的异常做法
+      const q = new URLSearchParams();
+      Object.entries(query).forEach(([k, v]) => {
+        if (v !== undefined) {
+          q.set(k, v.toString());
+        }
+      });
+      url += `&${q}`;
+    } else {
+      // 正常做法
+      const p = new URL(url);
+      Object.entries(query).forEach(([k, v]) => {
+        if (v !== undefined) {
+          p.searchParams.set(k, v.toString());
+        }
+      });
+      url = p.toString();
+    }
   }
 
   const auth = await genAuth({
     accessKeySecret,
     httpMethod: method,
-    uri,
+    uri: url.slice(host.length),
     headers,
   });
 
